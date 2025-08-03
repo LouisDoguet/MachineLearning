@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <vector>
 #include <cstdint>
+#include <math.h>
+
 
 inline std::string toHex(unsigned char &num){
 	std::stringstream ss;
@@ -38,9 +40,13 @@ class Image {
 	public:
 	
 	Image() = default;
-	Image(std::vector<unsigned char>&& pixels, int nrow, int ncol) 
-		: pixels(std::move(pixels)), nrow(nrow), ncol(ncol) {}; 
-
+	Image(std::vector<unsigned char>&& pixels, int nrow, int ncol) : 
+		pixels(std::move(pixels)), 
+		nrow(nrow), 
+		ncol(ncol),
+	       	norm_pixels(normalize(toUint())) {};	
+	
+	// Efficiency : Maybe void and brutal conversion
 	std::vector<unsigned int> toUint() const {
 		std::vector<unsigned int> result(ncol*nrow);
 		for (int i=0 ; i < (int) pixels.size() ; i++) {
@@ -51,6 +57,7 @@ class Image {
 
 	// Getters
 	const std::vector<unsigned char>& getPixels() const {return pixels;}
+	float getPixel(int n) const {return norm_pixels.at(n);}
 	const int size() const {return (nrow*ncol);}
 
 	// Friends
@@ -60,7 +67,7 @@ class Image {
 	const std::vector<unsigned char> pixels;
 	const int nrow;
 	const int ncol;
-
+	const std::vector<float> norm_pixels;
 };
 
 

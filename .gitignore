@@ -1,6 +1,8 @@
 # Ignore any directory containing 'data' in the name
 **/*data*/ 
 **/*data*/**
+.swp
+
 
 # Common virtual environment folders
 venv/
@@ -10,4 +12,6 @@ env/
 
 # Ignore Python cache
 __pycache__/
-*.pyc 
+*.pyc
+
+/Neural-Network-Experiments 

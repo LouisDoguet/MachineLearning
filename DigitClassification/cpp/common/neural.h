@@ -1,17 +1,15 @@
 #ifndef NEURAL_H
 #define NEURAL_H
 
-#include <random>
-
+#include <math.h>
 
 // Nodes
 class Node {
 
 	public:
-	Node() = default;
-	Node(const int id) : ID(id) {};
-	Node(const int id, double w, double b)
-	       : ID(id), weight(w), bias(b) {}; 
+	Node() : ID(0), weight(0), bias(0) {};
+	Node(const int id) : ID(hashKey++) {};
+	Node(const int id, double w, double b) : ID(hashKey++), weight(w), bias(b) {}; 
 	
 	const double& getWeight() const {return weight;}
 	const double& getBias() const {return bias;}
@@ -19,10 +17,10 @@ class Node {
 	void setWeight(double val) {weight = val;}
 	void setBias(double val) {bias = val;}
 
-	friend std::ostream &operator<<(std::ostream&, Node&);
+	friend std::ostream &operator<<(std::ostream&, const Node&);
 
 	private:
-	inline static int hashKey; // hashKey for random ID generation
+	inline static int hashKey = 0; // hashKey for random ID generation
 	const int ID;		   // const ID - secure
 	double weight;		   // Neuron weight
 	double bias;		   // Neuron bias
@@ -34,47 +32,68 @@ class Layer{
 
 	public:
 	Layer() = default;
-	Layer(const int nnodes) : ID(hashKey++), numNodes(nnodes) {}
-	Layer(const int nnodes, Layer &neighbor, int order) : ID(hashKey++), numNodes(nnodes) {
-		if (order > 0){
-			numNodesIn = 0;
-			numNodesOut = neighbor.numNodes;
-			neighbor.numNodesIn = nnodes;
-		}
-		else{
-			numNodesIn = neighbor.numNodes;
-			numNodesOut = 0;
-			neighbor.numNodesIn = nnodes;
-		}
+	Layer(const int nnodes) : ID(hashKey++), numNodes(nnodes) {
+		numNodesIn = 0;
+		numNodesOut = 0;
 		setLayerNodes();
 	}
-	Layer(const int nnodes, Layer &prev, Layer &next) : ID(hashKey++), numNodes(nnodes) {
-		numNodesIn = prev.numNodes;
-		numNodesOut = next.numNodes;
+
+	// Constructor :
+	// - nnodes : (int) Number of nodes
+	// - prev : (Layer&) Previous layer
+	// - next : (Layer&) Next Layer
+	
+	Layer(const int nnodes, Layer &prev, Layer &next) : 
+		ID(hashKey++), 
+		numNodes(nnodes),
+       		numNodesIn(prev.numNodes),
+		numNodesOut(next.numNodes) {
+
 		prev.numNodesOut = nnodes;
 		next.numNodesIn = nnodes;
 
 		setLayerNodes();
 	}
-
+	
+	// Generate the node list
 	void setLayerNodes() {
-		for (int i=0; i<numNodes; i++){
+		for (int i=0; i<numNodes; i++)
 			Nodes.push_back(Node(i));
-		}
 	}
 
-	friend std::ostream &operator<<(std::ostream&, Layer&);
+	const Node& getNode(int n) const {
+		return Nodes.at(n);
+	}
+
+	const int size() const {return Nodes.size();}
+
+	friend std::ostream &operator<<(std::ostream&, const Layer&);
 
 	private:
-	inline static int hashKey = 0;
-	const int ID;
-	const int numNodes;
+	inline static int hashKey = 0; // hashKey for random ID generation
+	const int ID;		       // ID for secure
+	const int numNodes;	       // Number of node in the layer
 	int numNodesIn;
 	int numNodesOut;
-
+	
+	protected:
 	std::vector<Node> Nodes;	
 };
 
+class InputLayer : public Layer {
+	public:
+	InputLayer(const int nnodes) : Layer(nnodes) {}
+	InputLayer(Image& img) : Layer(img.size()) {
+		setupImage(img);
+	}
+
+	private:
+	void setupImage(Image& img){
+		for (int i=0; i<size(); i++){
+			Nodes[i].setWeight(img.getPixel(i));
+		}
+	}
+};
 
 // Network
 class Network {
@@ -83,18 +102,18 @@ class Network {
 	Network(std::vector<Layer> layers) : layers(layers) {}
 
 	private:
-	std::vector<layer> layers;
-}
+	std::vector<Layer> layers;
+};
 
 
-std::ostream &operator<<(std::ostream &os, Node &n) {
+std::ostream &operator<<(std::ostream &os, const Node &n) {
 	os << "NodeID : " << n.ID << std::endl
 	   << "NodeW  : " << n.weight << std::endl
 	   << "NodeB  : " << n.bias << std::endl;
 	return os;
 };
 
-std::ostream &operator<<(std::ostream &os, Layer &lay) {
+std::ostream &operator<<(std::ostream &os, const Layer &lay) {
 	os << "Layer Level       : " << lay.ID << std::endl
 	   << "Layer numNodes    : " << lay.numNodes << std::endl
 	   << "Layer numNodesIn  : " << lay.numNodesIn << std::endl
