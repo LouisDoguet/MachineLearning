@@ -1,0 +1,13 @@
+# Ignore any directory containing 'data' in the name
+**/*data*/ 
+**/*data*/**
+
+# Common virtual environment folders
+venv/
+env/
+.venv/
+.env/
+
+# Ignore Python cache
+__pycache__/
+*.pyc 
