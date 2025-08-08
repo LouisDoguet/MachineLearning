@@ -8,7 +8,7 @@ class Node {
 
 	public:
 	Node() : ID(0), weight(0), bias(0) {};
-	Node(const int id) : ID(hashKey++) {};
+	Node(const int id) : ID(hashKey++), weight(0.), bias(0.) {};
 	Node(const int id, double w, double b) : ID(hashKey++), weight(w), bias(b) {}; 
 	
 	const double& getWeight() const {return weight;}
