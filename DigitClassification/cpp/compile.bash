@@ -7,6 +7,5 @@ INCLUDES="-Icommon"
 SOURCES="src"
 
 SRC=$(find common src -name "*.cpp")
-echo $SRC
 
 $CXX $CXXFLAGS $INCLUDES $SRC -o prog 

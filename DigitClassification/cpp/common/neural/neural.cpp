@@ -1,6 +1,8 @@
 #include <neural/neural.h>
 #include <ostream>
 
+namespace Neural {
+
 std::ostream &operator<<(std::ostream &os, const Node &n) {
 	os << "NodeID : " << n.ID << std::endl
 	   << "NodeW  : " << n.weight << std::endl
@@ -14,6 +16,6 @@ std::ostream &operator<<(std::ostream &os, const Layer &lay) {
 	   << "Layer numNodesIn  : " << lay.numNodesIn << std::endl
 	   << "Layer numNodesOut : " << lay.numNodesOut << std::endl;
 	return os;
+};
+
 }
-
-

@@ -1,26 +1,22 @@
 #ifndef MATH_H
 #define MATH_H
 
-#pragma once
-
 #include <map>
 #include <algorithm>
 #include <vector>
 #include <string>
 
-class Node;
+#pragma once
+
+namespace Neural { class Node; }
+
+namespace Math {
 
 const std::vector<float> normalize(const std::vector<unsigned int>& UIntVec); 
 
-inline void ReLU(Node& node, double val);
+void ReLU(Neural::Node& node, double val); 
+void Sigmoid(Neural::Node& node, double val); 
 
-class Activation {
-	public:
-	Activation(const std::string name, Node& node) : name(name) {}; 
-	
-	private:
-	const std::string name;
-};
-
+} // Namespace Math
 
 #endif

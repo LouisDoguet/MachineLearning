@@ -46,7 +46,7 @@ class Image {
 		pixels(std::move(pixels)), 
 		nrow(nrow), 
 		ncol(ncol),
-	       	norm_pixels(normalize(toUint())) {};	
+	       	norm_pixels(Math::normalize(toUint())) {};	
 	
 	// Efficiency : Maybe void and brutal conversion
 	std::vector<unsigned int> toUint() const {

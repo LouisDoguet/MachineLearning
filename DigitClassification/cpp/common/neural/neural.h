@@ -4,7 +4,8 @@
 #pragma once
 
 #include <idxreader.h>
-#include <math/math.h>
+
+namespace Neural {
 
 // Nodes
 class Node {
@@ -12,12 +13,16 @@ class Node {
 	public:
 	Node() : ID(hashKey++), weight(0.), bias(0.) {};
 	Node(double w, double b) : ID(hashKey++), weight(w), bias(b) {}; 
-	
+
 	inline const double& getWeight() const {return weight;}
 	inline const double& getBias() const {return bias;}
 	
 	inline void setWeight(double val) {weight = val;}
 	inline void setBias(double val) {bias = val;}
+
+	inline void activate(void (*func)(Node&, double)){
+		func(*this, 0.01);
+	};
 
 	friend std::ostream &operator<<(std::ostream&, const Node&);
 
@@ -95,6 +100,12 @@ class InputLayer : public Layer {
 	}
 };
 
+class OutputLayer : public Layer {
+	public:
+	OutputLayer(const int noutput) : Layer(noutput) {}
+
+};
+
 // Network
 class Network {
 	public:
@@ -105,8 +116,12 @@ class Network {
 	std::vector<Layer> layers;
 };
 
+
 std::ostream &operator<<(std::ostream &os, const Node &n);
 
 std::ostream &operator<<(std::ostream &os, const Layer &lay);
+
+} // Namespace neural
+
 
 #endif
