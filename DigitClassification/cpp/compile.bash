@@ -1,14 +1,12 @@
 #!/bin/bash
 
 CXX=g++
-CXXFLAGS="-std=c++17 -Wall" 
+CXXFLAGS="-std=c++17 -Wall -Wextra -O2" 
 
 INCLUDES="-Icommon"
 SOURCES="src"
 
-
-
-SRC=$SOURCES/main.cpp
-
+SRC=$(find common src -name "*.cpp")
+echo $SRC
 
 $CXX $CXXFLAGS $INCLUDES $SRC -o prog 

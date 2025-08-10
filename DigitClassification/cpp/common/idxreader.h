@@ -1,12 +1,14 @@
 #ifndef IDXREADER_H
 #define IDXREADER_H
 
+#pragma once
+
 #include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <vector>
 #include <cstdint>
-#include <math.h>
+#include <math/math.h>
 
 
 inline std::string toHex(unsigned char &num){
@@ -23,7 +25,7 @@ inline std::string toHex(int &num) {
 }
 
 
-unsigned int read_uint32(std::ifstream &file, unsigned int shift){
+inline unsigned int read_uint32(std::ifstream &file, unsigned int shift){
 	file.seekg(shift*4);
 	unsigned char b0 = file.get();
 	unsigned char b1 = file.get();
@@ -58,7 +60,7 @@ class Image {
 	// Getters
 	const std::vector<unsigned char>& getPixels() const {return pixels;}
 	float getPixel(int n) const {return norm_pixels.at(n);}
-	const int size() const {return (nrow*ncol);}
+	int size() const {return (nrow*ncol);}
 
 	// Friends
 	friend std::ostream& operator<<(std::ostream&, Image&);
@@ -122,7 +124,7 @@ class idxDatabase {
 };
 
 // Surcharges
-std::ostream &operator<<(std::ostream &os, idxDatabase &db) {
+inline std::ostream &operator<<(std::ostream &os, idxDatabase &db) {
 	os << "Path    :   " << db.getPath() << std::endl
 	   << "Mnumber :   " << db.mNumber() << std::endl
 	   << "Nimages :   " << db.nImage() << std::endl
@@ -130,7 +132,7 @@ std::ostream &operator<<(std::ostream &os, idxDatabase &db) {
 	return os;
 };
 
-std::ostream &operator<<(std::ostream &os, Image &img) {
+inline std::ostream &operator<<(std::ostream &os, Image &img) {
 	
 	const std::string shades = " .:-=+*#%@"; 
 	const std::vector<unsigned char>& pixels = img.getPixels();
